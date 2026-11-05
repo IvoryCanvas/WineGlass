@@ -6,11 +6,12 @@ import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { projectRoot } from '../src/paths.js';
+import { errorMessage } from '../src/errors.js';
 
 const exec = promisify(execFile);
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const root = projectRoot;
 const runtime = join(root, '.runtime');
 const WINE_URL = 'https://github.com/Gcenx/macOS_Wine_builds/releases/download/11.21/wine-devel-11.21-osx64.tar.xz';
 const WINE_SHA256 = '9909b486657e10ab66c7279371ae1f990345b596b3b1b3a0cf21f28af24fa0ce';
@@ -18,19 +19,19 @@ const CHROMIUM_REVISION = '1735907';
 const ZIG_VERSION = '0.17.1';
 const ZIG_SHA256 = '75f1bc7a1e9852f17ec9a0c1895f767c4ec56d46bc8a834920eece1d0359dd8d';
 
-async function exists(path) { try { await access(path); return true; } catch { return false; } }
-async function sha256(path) {
+async function exists(path: string): Promise<boolean> { try { await access(path); return true; } catch { return false; } }
+async function sha256(path: string): Promise<string> {
   const hash = createHash('sha256');
   for await (const chunk of createReadStream(path)) hash.update(chunk);
   return hash.digest('hex');
 }
-async function download(url, path, expectedHash) {
+async function download(url: string, path: string, expectedHash?: string): Promise<void> {
   if (await exists(path) && (!expectedHash || await sha256(path) === expectedHash)) return;
   console.log(`Downloading ${url}`);
   const response = await fetch(url, { signal: AbortSignal.timeout(300000) });
   if (!response.ok || !response.body) throw new Error(`Download failed: HTTP ${response.status}`);
   const temp = `${path}.partial`;
-  await pipeline(Readable.fromWeb(response.body), createWriteStream(temp));
+  await pipeline(Readable.from(response.body, { objectMode: false }), createWriteStream(temp));
   if (expectedHash && await sha256(temp) !== expectedHash) throw new Error('Wine archive SHA-256 does not match its published release digest.');
   await rename(temp, path);
 }
@@ -82,5 +83,5 @@ try {
     });
     console.log(result.stdout);
   }
-  console.log(`Runtime ready in ${runtime}\nNo virtual machine or Windows installation is used.\nNext: node bin/wineglass.mjs --demo`);
-} catch (error) { console.error(error.message); process.exitCode = 1; }
+  console.log(`Runtime ready in ${runtime}\nNo virtual machine or Windows installation is used.\nNext: node dist/bin/wineglass.js --demo`);
+} catch (error) { console.error(errorMessage(error)); process.exitCode = 1; }

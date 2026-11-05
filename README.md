@@ -34,10 +34,13 @@ Setup downloads Wine, matching Chromium builds and a build toolchain into
 `.runtime/`. Allow several GB of disk space. It does not install Windows.
 [First-run guide](docs/quickstart.md).
 
+The source is TypeScript. Setup and demo commands build it into `dist/`
+automatically. Use `npm run build` to rebuild an existing installation.
+
 With your development server running, inspect both browser windows:
 
 ```sh
-node bin/wineglass.mjs http://localhost:3000 --live
+node dist/bin/wineglass.js http://localhost:3000 --live
 ```
 
 Press Enter in the terminal to close them. The initial report is saved; later

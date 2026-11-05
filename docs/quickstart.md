@@ -14,6 +14,10 @@ checked against pinned SHA-256 digests. Browser files come from Google's
 Chromium storage. pefile is installed under `.runtime/` to inspect PE files.
 The setup does not install Rosetta or write apps into `/Applications`.
 
+The Node entry points are built from TypeScript. Setup and demo commands
+compile automatically; run `npm run build` after editing source before calling
+`node dist/bin/wineglass.js` directly.
+
 The demo command starts a temporary loopback server, opens it in both browsers,
 stores the report, and stops the server. Review the default controls, text
 wrapping and inner scrollbars. Read the font observations before interpreting
@@ -24,7 +28,7 @@ any difference as Windows behavior.
 Start your application in a separate terminal. Then run:
 
 ```sh
-node bin/wineglass.mjs http://localhost:3000/settings --live
+node dist/bin/wineglass.js http://localhost:3000/settings --live
 ```
 
 Press Enter to close both windows. Existing browser cookies are not imported.
@@ -33,7 +37,7 @@ Clicks, form values and later screenshots are not synchronized.
 To capture after an application-specific readiness signal:
 
 ```sh
-node bin/wineglass.mjs http://localhost:3000/settings \
+node dist/bin/wineglass.js http://localhost:3000/settings \
   --selector '[data-ready="true"]' --delay 1000 \
   --out captures/settings --open
 ```

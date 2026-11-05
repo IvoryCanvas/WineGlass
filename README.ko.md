@@ -32,10 +32,13 @@ npm run demo -- --height 1100 --open
 내려받습니다. 수 GB의 디스크 공간이 필요합니다. Windows는 설치하지
 않습니다. [첫 실행 안내](docs/quickstart.md)를 참고하세요.
 
+소스는 TypeScript이며 설정·데모 명령이 `dist/`로 자동 빌드합니다.
+이미 준비된 환경에서 소스를 수정했다면 `npm run build`로 다시 빌드합니다.
+
 개발 서버를 실행한 뒤 두 브라우저 창을 열어 봅니다.
 
 ```sh
-node bin/wineglass.mjs http://localhost:3000 --live
+node dist/bin/wineglass.js http://localhost:3000 --live
 ```
 
 터미널에서 Enter를 누르면 두 창이 종료됩니다. 최초 캡처 결과를 저장하며,

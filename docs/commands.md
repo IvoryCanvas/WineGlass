@@ -1,9 +1,17 @@
 # Command Reference
 
+Build the TypeScript source before invoking a compiled entry point directly:
+
 ```sh
-node bin/wineglass.mjs <url> [options]
-node bin/wineglass.mjs --demo [options]
+npm run build
+node dist/bin/wineglass.js <url> [options]
+node dist/bin/wineglass.js --demo [options]
 ```
+
+`npm run typecheck` checks the source without emitting files. `npm run check`
+builds with strict types, then checks Python syntax, documentation links and
+the example output contract. `npm run demo` and `npm run setup:wine` build
+automatically. Build output is ignored by Git.
 
 | Option | Default | Behavior |
 | --- | --- | --- |

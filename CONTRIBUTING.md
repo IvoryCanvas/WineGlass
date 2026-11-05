@@ -25,8 +25,13 @@ npm run check
 | Wine or shim | Import/export checks, preserved original and browser launch. |
 | Runtime pins | Digests and a complete fresh setup rehearsal. |
 
-`npm run check` validates syntax, local documentation links and example
-metadata. It does not start Wine or measure Windows fidelity.
+`npm run check` checks strict TypeScript compilation, Python syntax, local documentation
+links and example metadata. It does not start Wine or measure Windows fidelity.
+
+Use `npm run typecheck` for a check without build output, and `npm run build`
+before running a compiled entry point directly. Keep runtime and repository
+scripts in TypeScript. Python and C are reserved for the native compatibility
+helper. Build output under `dist/` is not committed.
 
 Use product-focused branches such as `fix/font-receipt`. Commit subjects use
 lowercase Conventional Commits:

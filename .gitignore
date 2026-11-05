@@ -6,3 +6,5 @@ captures/
 __pycache__/
 .cache/
 *.partial
+dist/
+*.tsbuildinfo

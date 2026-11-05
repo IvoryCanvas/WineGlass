@@ -12,12 +12,27 @@ loopback URL or bundled demo
 
 | File | Responsibility |
 | --- | --- |
-| `bin/wineglass.mjs` | Input validation, capture orchestration and cleanup. |
-| `bin/setup-wine.mjs` | Pinned runtime downloads and shim build. |
+| `bin/wineglass.ts` | Input validation, capture orchestration and cleanup. |
+| `bin/setup-wine.ts` | Pinned runtime downloads and shim build. |
 | `bin/pointer-compat.py` | PE inspection, shim verification and reversible import change. |
-| `src/capture.mjs` | Browser startup, CDP connection, screenshots and font observations. |
-| `src/report.mjs` | Pixel comparison, escaped HTML and metadata output. |
-| `src/demo.mjs` | Temporary loopback server with an invented example page. |
+| `src/capture.ts` | Browser startup, CDP connection, screenshots and font observations. |
+| `src/report.ts` | Pixel comparison, escaped HTML and metadata output. |
+| `src/demo.ts` | Temporary loopback server with an invented example page. |
+| `src/types.ts` | Browser-session, capture-option and output-data contracts. |
+| `src/paths.ts` | Resolve the project root from the compiled module location. |
+| `scripts/check.ts` | Python syntax, documentation and output-schema validation. |
+
+## TypeScript Build
+
+`tsconfig.json` uses NodeNext ESM resolution, strict checking, unchecked-index
+checking and exact optional properties. `npm run build` compiles Node entry
+points, runtime modules and repository checks into `dist/`. Only TypeScript
+source is committed; compiled JavaScript and source maps are ignored.
+
+The compiled entry points resolve `.runtime/` from the project root. The
+Python helper and its C source remain under `bin/` and `src/` respectively.
+Browser-side demo and viewer functions are also written and checked as
+TypeScript; their compiled function bodies are embedded into generated HTML.
 
 Playwright launches macOS Chromium directly and attaches to Windows Chromium
 through its loopback DevTools endpoint. Separate contexts keep page state

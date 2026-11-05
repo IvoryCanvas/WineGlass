@@ -5,12 +5,14 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "wineglass": "bin/wineglass.mjs"
+    "wineglass": "dist/bin/wineglass.js"
   },
   "scripts": {
-    "setup:wine": "node bin/setup-wine.mjs",
-    "demo": "node bin/wineglass.mjs --demo",
-    "check": "node scripts/check.mjs"
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "setup:wine": "npm run build && node dist/bin/setup-wine.js",
+    "demo": "npm run build && node dist/bin/wineglass.js --demo",
+    "check": "npm run build && node dist/scripts/check.js"
   },
   "engines": {
     "node": ">=22"
@@ -29,6 +31,9 @@
     "url": "https://github.com/IvoryCanvas/WineGlass/issues"
   },
   "devDependencies": {
-    "ajv": "8.20.0"
+    "@types/node": "22.20.5",
+    "@types/pngjs": "6.0.5",
+    "ajv": "8.20.0",
+    "typescript": "7.0.2"
   }
 }

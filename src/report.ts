@@ -2,17 +2,26 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import pixelmatch from 'pixelmatch';
+import type { CapturePair, ComparisonMetadata } from './types.js';
 
-const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+const escapes: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = (value: unknown): string => String(value).replace(/[&<>"']/g, char => escapes[char] ?? char);
 
-export async function writeReport(directory, captures) {
+function initializeOverlay(): void {
+  const control = document.getElementById('alpha');
+  const overlay = document.getElementById('overlay');
+  if (!(control instanceof HTMLInputElement) || !(overlay instanceof HTMLImageElement)) return;
+  control.addEventListener('input', () => { overlay.style.opacity = String(Number(control.value) / 100); });
+}
+
+export async function writeReport(directory: string, captures: CapturePair): Promise<ComparisonMetadata> {
   const a = PNG.sync.read(await readFile(join(directory, 'macos.png')));
   const b = PNG.sync.read(await readFile(join(directory, 'wine-windows.png')));
   if (a.width !== b.width || a.height !== b.height) throw new Error('Screenshot dimensions differ. Use a shared viewport and scale.');
   const diff = new PNG({ width: a.width, height: a.height });
   const changed = pixelmatch(a.data, b.data, diff.data, a.width, a.height, { threshold: 0.1 });
   await writeFile(join(directory, 'difference.png'), PNG.sync.write(diff));
-  const manifest = {
+  const manifest: ComparisonMetadata = {
     capturedAt: new Date().toISOString(),
     target: captures[0].url,
     renderer: 'macOS native Chromium vs Windows Chromium on Wine',
@@ -49,7 +58,7 @@ export async function writeReport(directory, captures) {
   <h2>차이 표시</h2><figure><a href="difference.png"><img src="difference.png" alt="Pixel differences"></a></figure>
   <h2>실행 환경</h2><div class="table"><table><thead><tr><th>환경</th><th>브라우저 버전</th><th>navigator.platform</th><th>페이지 스크롤바</th><th>표본에서 실제 사용된 폰트</th></tr></thead><tbody>${details}</tbody></table></div>
   <p class="muted">폰트는 앞쪽 DOM 노드 최대 200개에서 수집한 표본입니다. 전체 글리프 집계가 아닙니다. CSS 글꼴 선언과 자세한 환경은 metadata.json에 기록됩니다. 브라우저 버전이 다르거나 Wine에서 Windows 기본 폰트가 대체되면 해당 차이도 이미지에 포함됩니다. 로그인 상태는 새 프로필로 시작합니다. 캡처는 페이지 영역만 포함합니다.</p>
-  <p><a href="metadata.json">메타데이터 JSON</a></p></main><script>document.getElementById('alpha').addEventListener('input',event=>document.getElementById('overlay').style.opacity=event.target.value/100);</script></html>`;
+  <p><a href="metadata.json">메타데이터 JSON</a></p></main><script>(${initializeOverlay.toString()})();</script></html>`;
   await writeFile(join(directory, 'index.html'), html);
   return manifest;
 }

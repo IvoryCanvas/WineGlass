@@ -1,6 +1,12 @@
 import { createServer } from 'node:http';
+import type { DemoServer } from './types.js';
 
-export async function startDemo() {
+function showPlatform(): void {
+  const target = document.getElementById('platform');
+  if (target) target.textContent = navigator.platform + ' | ' + navigator.userAgent;
+}
+
+export async function startDemo(): Promise<DemoServer> {
   const html = `<!doctype html><html lang="ko"><meta charset="utf-8"><title>WineGlass demo</title>
   <style>
   :root { color-scheme: light; font-family: system-ui, sans-serif; color: #243044; background: #f3f5f9; }
@@ -24,8 +30,10 @@ export async function startDemo() {
   <div class="card"><small>SYSTEM FONT / WRAPPING</small><p class="sample">Typography — Aa Bb 0123456789</p>
   <p class="narrow">System fonts affect the width of a sentence and may change where text wraps onto the next line. 한글 글꼴의 차이도 확인합니다.</p>
   <div class="scroll">스크롤바와 기본 글꼴을 확인합니다.<br><br>First row<br><br>Second row<br><br>Third row<br><br>Last row</div></div>
-  <p class="platform" id="platform"></p><script>document.getElementById('platform').textContent=navigator.platform+' | '+navigator.userAgent;</script></main></html>`;
+  <p class="platform" id="platform"></p><script>(${showPlatform.toString()})();</script></main></html>`;
   const server = createServer((request, response) => { response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }); response.end(html); });
-  await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
-  return { url: `http://127.0.0.1:${server.address().port}`, close: () => new Promise(resolve => server.close(resolve)) };
+  await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('The demo server has no TCP address.');
+  return { url: `http://127.0.0.1:${address.port}`, close: () => new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())) };
 }

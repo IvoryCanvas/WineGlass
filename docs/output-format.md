@@ -7,6 +7,8 @@ PNGs contain viewport pixels at DPR 1.
 The [JSON Schema](../schema/metadata.schema.json) describes version 0.1's output.
 The [example receipt](../examples/metadata.json) comes from the bundled demo.
 The schema is checked in repository validation, not at capture runtime.
+The runtime TypeScript data structures are defined in
+[src/types.ts](../src/types.ts).
 
 | Field | Meaning |
 | --- | --- |

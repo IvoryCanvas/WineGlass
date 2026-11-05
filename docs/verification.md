@@ -31,3 +31,17 @@ reports pointer-device lookup as unsupported.
 
 Evidence uses the public demo, not a private application. Further verification
 should record exact browser versions, fonts, runtime and capture settings.
+
+## TypeScript Migration
+
+On the same Mac, TypeScript 7.0.2 compiled the CLI, runtime modules and check
+script with strict types, unchecked-index checking and exact optional
+properties. `npm run check` passed compilation, Python syntax, documentation
+links and example-metadata validation.
+
+The compiled setup entry point reused the runtime at the project root. Both
+headless and interactive compiled CLI runs produced the demo report. Enter
+closed the interactive run. Actual metadata matched the output schema, both
+browsers reported the same version, and the TypeScript-authored viewer slider
+ran without page errors. Help, missing-URL and non-loopback-URL exits were also
+checked. This adds no evidence about real Windows fidelity or fresh setup.

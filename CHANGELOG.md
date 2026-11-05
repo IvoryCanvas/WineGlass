@@ -2,6 +2,8 @@
 
 ## 0.1.0 — Unreleased
 
+- Write runtime modules, entry points and repository checks in strict TypeScript.
+- Compile executable ESM entry points into `dist/` before running them.
 - Open Windows Chromium on a Mac through Wine.
 - Capture matching macOS and Windows browser builds and save a comparison viewer.
 - Record actual versions, platforms, font samples and page errors.
