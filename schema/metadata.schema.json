@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/IvoryCanvas/WineGlass/blob/main/schema/metadata.schema.json",
+  "title": "WineGlass capture metadata",
+  "type": "object",
+  "required": [
+    "capturedAt",
+    "target",
+    "renderer",
+    "fidelity",
+    "changedPixels",
+    "changedPercent",
+    "captures"
+  ],
+  "properties": {
+    "capturedAt": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "renderer": {
+      "type": "string"
+    },
+    "fidelity": {
+      "type": "string"
+    },
+    "changedPixels": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "changedPercent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "captures": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "version",
+          "url",
+          "platform",
+          "userAgent",
+          "bodyFont",
+          "viewport",
+          "scrollbarWidth",
+          "documentSize",
+          "platformFonts",
+          "fontSampleLimit",
+          "pageErrors"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          },
+          "bodyFont": {
+            "type": "string"
+          },
+          "viewport": {
+            "type": "object",
+            "required": [
+              "width",
+              "height",
+              "devicePixelRatio"
+            ],
+            "properties": {
+              "width": {
+                "type": "integer",
+                "minimum": 320,
+                "maximum": 4096
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 320,
+                "maximum": 4096
+              },
+              "devicePixelRatio": {
+                "const": 1
+              }
+            },
+            "additionalProperties": false
+          },
+          "scrollbarWidth": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "documentSize": {
+            "type": "object",
+            "required": [
+              "width",
+              "height"
+            ],
+            "properties": {
+              "width": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          },
+          "platformFonts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "familyName",
+                "postScriptName",
+                "isCustomFont",
+                "glyphCount"
+              ],
+              "properties": {
+                "familyName": {
+                  "type": "string"
+                },
+                "postScriptName": {
+                  "type": "string"
+                },
+                "isCustomFont": {
+                  "type": "boolean"
+                },
+                "glyphCount": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "fontSampleLimit": {
+            "const": 200
+          },
+          "pageErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,126 @@
+{
+  "capturedAt": "2026-11-05T08:11:02.559Z",
+  "target": "http://127.0.0.1:54439/",
+  "renderer": "macOS native Chromium vs Windows Chromium on Wine",
+  "fidelity": "Wine compatibility rendering; not a real Windows capture or pass/fail test",
+  "changedPixels": 39816,
+  "changedPercent": 2.83,
+  "captures": [
+    {
+      "label": "macOS native",
+      "version": "159.0.8144.0",
+      "url": "http://127.0.0.1:54439/",
+      "platform": "MacIntel",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/159.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 1280,
+        "height": 1100,
+        "devicePixelRatio": 1
+      },
+      "scrollbarWidth": 0,
+      "bodyFont": "system-ui, sans-serif",
+      "documentSize": {
+        "width": 1280,
+        "height": 1100
+      },
+      "platformFonts": [
+        {
+          "familyName": "Courier",
+          "postScriptName": "Courier-Bold",
+          "isCustomFont": false,
+          "glyphCount": 56
+        },
+        {
+          "familyName": "Apple SD Gothic Neo",
+          "postScriptName": "AppleSDGothicNeo-Regular",
+          "isCustomFont": false,
+          "glyphCount": 194
+        },
+        {
+          "familyName": "Apple SD Gothic Neo",
+          "postScriptName": "AppleSDGothicNeo-Bold",
+          "isCustomFont": false,
+          "glyphCount": 16
+        },
+        {
+          "familyName": ".SF NS",
+          "postScriptName": ".SFNS-Regular",
+          "isCustomFont": false,
+          "glyphCount": 460
+        },
+        {
+          "familyName": "Courier",
+          "postScriptName": "Courier",
+          "isCustomFont": false,
+          "glyphCount": 270
+        },
+        {
+          "familyName": ".SF NS",
+          "postScriptName": ".SFNS-Bold",
+          "isCustomFont": false,
+          "glyphCount": 8
+        },
+        {
+          "familyName": "Arial",
+          "postScriptName": "ArialMT",
+          "isCustomFont": false,
+          "glyphCount": 34
+        }
+      ],
+      "fontSampleLimit": 200,
+      "pageErrors": []
+    },
+    {
+      "label": "Windows Chromium on Wine (approximation)",
+      "version": "159.0.8144.0",
+      "url": "http://127.0.0.1:54439/",
+      "platform": "Win32",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/159.0.0.0 Safari/537.36",
+      "viewport": {
+        "width": 1280,
+        "height": 1100,
+        "devicePixelRatio": 1
+      },
+      "scrollbarWidth": 0,
+      "bodyFont": "system-ui, sans-serif",
+      "documentSize": {
+        "width": 1280,
+        "height": 1100
+      },
+      "platformFonts": [
+        {
+          "familyName": "Tahoma",
+          "postScriptName": "Tahoma-Bold",
+          "isCustomFont": false,
+          "glyphCount": 8
+        },
+        {
+          "familyName": "Tahoma",
+          "postScriptName": "Tahoma",
+          "isCustomFont": false,
+          "glyphCount": 460
+        },
+        {
+          "familyName": "Arial",
+          "postScriptName": "Arial-BoldMT",
+          "isCustomFont": false,
+          "glyphCount": 56
+        },
+        {
+          "familyName": "Arial",
+          "postScriptName": "ArialMT",
+          "isCustomFont": false,
+          "glyphCount": 288
+        },
+        {
+          "familyName": "Arial Unicode MS",
+          "postScriptName": "ArialUnicodeMS",
+          "isCustomFont": false,
+          "glyphCount": 210
+        }
+      ],
+      "fontSampleLimit": 200,
+      "pageErrors": []
+    }
+  ]
+}

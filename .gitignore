@@ -1,0 +1,8 @@
+node_modules/
+.runtime/
+captures/
+*.log
+.DS_Store
+__pycache__/
+.cache/
+*.partial
