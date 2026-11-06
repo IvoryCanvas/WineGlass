@@ -41,9 +41,11 @@ npm run demo -- --height 1100 --open
 node dist/bin/wineglass.js http://localhost:3000 --live
 ```
 
-터미널에서 Enter를 누르면 두 창이 종료됩니다. 최초 캡처 결과를 저장하며,
-이후 조작 내용은 리포트에 자동 반영되지 않습니다. 창을 유지하지 않고
-캡처만 하려면 `--live` 대신 `--open`을 사용합니다.
+두 브라우저에서 각각 로그인하거나 같은 화면을 연 뒤, 터미널에 `c`를
+입력하고 Enter를 누르면 현재 화면을 새로고침 없이 다시 캡처합니다.
+캡처할 때마다 별도 리포트를 저장합니다. Enter 또는 `q`와 Enter를 누르면
+두 창이 종료됩니다. 클릭과 로그인 정보는 브라우저 간에 동기화하지 않습니다.
+한 번만 캡처하려면 `--live` 대신 `--open`을 사용합니다.
 
 ## 결과 확인
 
@@ -55,9 +57,20 @@ node dist/bin/wineglass.js http://localhost:3000 --live
 | `difference.png` | 두 캡처 사이의 픽셀 차이 |
 | `metadata.json` | 브라우저 버전, 플랫폼, 뷰포트, 폰트 표본, 페이지 오류 |
 
-기본 저장 위치는 현재 폴더의 `captures/`이며 `--out`으로 바꿀 수 있습니다.
-픽셀 차이는 관찰값입니다. 결함 점수나 Windows 재현 정확도를 뜻하지
-않습니다. 동적 콘텐츠와 폰트 대체도 차이에 포함됩니다.
+성공한 캡처마다 현재 폴더의 `captures/` 아래에 새 하위 폴더를 만듭니다.
+`--out`으로 상위 저장 위치를 바꿀 수 있으며 터미널에 `index.html` 경로를
+출력합니다. 실패한 캡처가 이전 리포트를 덮어쓰지 않습니다. 픽셀 차이는
+관찰값이며 결함 점수나 Windows 재현 정확도를 뜻하지 않습니다.
+동적 콘텐츠와 폰트 대체도 차이에 포함됩니다.
+
+준비된 런타임 진단과 손상된 설치 복구:
+
+```sh
+node dist/bin/wineglass.js doctor
+npm run setup:wine -- --repair
+```
+
+검사 범위는 [진단과 복구](docs/commands.md#diagnostics-and-recovery)를 참고하세요.
 
 ## 확인한 범위
 
@@ -85,7 +98,7 @@ Chromium **159.0.8144.0**의 두 플랫폼 빌드로 데모를 비교했습니�
 브라우저의 로그인 상태를 공유하지 않습니다. 주소창과 OS 대화상자는
 캡처하지 않습니다. Wine 브라우저는 `--no-sandbox`와 GPU 가속 비활성화
 상태로 실행하므로 신뢰할 수 있는 로컬 앱을 대상으로 사용하세요.
-같은 런타임에서는 한 번에 한 명령만 실행합니다.
+같은 런타임의 중복 명령은 실행 잠금으로 차단합니다.
 
 기여 방법은 [CONTRIBUTING.md](CONTRIBUTING.md), 보안과 데이터 처리 범위는
 [SECURITY.md](SECURITY.md), [PRIVACY.md](PRIVACY.md)를 참고하세요.

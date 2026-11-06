@@ -14,12 +14,15 @@ wrapping, font fallback and scrollbars.
 
 Given a trusted loopback URL and a prepared runtime, the command:
 
-1. Starts Windows Chromium under Wine and native macOS Chromium.
+1. Acquires the runtime lock and starts Windows Chromium under Wine and native
+   macOS Chromium.
 2. Creates separate contexts with the same viewport and capture settings.
 3. Loads the URL, waits for fonts, an optional visible selector and a delay.
 4. Captures each visible page viewport.
-5. Writes both images, a difference image, HTML and environment metadata.
-6. Closes owned processes; `--live` keeps contexts open until Enter.
+5. Publishes both images, a difference image, HTML and environment metadata in
+   a new report folder after the complete result is ready.
+6. Closes owned processes; `--live` keeps contexts open, accepts `c` + Enter
+   to capture their current pages, and closes on Enter or `q` + Enter.
 
 Rendering runs on the Mac. Setup downloads dependencies and page resources can
 use the network. There is no hosted rendering service.
@@ -32,12 +35,13 @@ use the network. There is no hosted rendering service.
 | Windows browser execution on Wine | Windows itself is absent; OS behavior is not reproduced exactly. |
 | Viewport capture and visual comparison | No automatic Windows-compatibility verdict. |
 | Observed font information | A bounded DOM sample, not every glyph in the page. |
-| Interactive windows | Subsequent inputs and captures are not synchronized. |
+| Interactive windows and current-page recapture | Inputs and navigation are independent; sessions last only for the run. |
+| Runtime diagnostics and repair | Inspects managed files; no complete runtime or OS fidelity audit. |
 | Local JSON output | No hosted API or published npm package is claimed. |
 
 Real Windows execution, Windows font distribution, DPI calibration, OS dialogs,
-IME, screen readers, pen input, session import and parallel commands sharing a
-runtime are outside this prototype's verified scope.
+IME, screen readers, pen input and session import are outside this prototype's verified scope. Commands sharing a runtime are serialized by rejection of
+overlapping execution.
 
 ## Acceptance Criteria
 
@@ -52,7 +56,13 @@ runtime are outside this prototype's verified scope.
 | Readiness selector remains absent | Fail after the browser wait expires. |
 | Windows browser startup fails | Fail and identify the Wine log. |
 | Pixels differ | Report differences without treating the count as a defect score. |
-| `--live` finishes capture | Keep both contexts open until Enter without replacing saved evidence silently. |
+| `--live` finishes capture | Keep both contexts open; Enter or `q` + Enter closes them. |
+| `c` + Enter in live mode | Capture current pages without reload into a separate report folder. |
+| Capture fails | Do not publish a partial report or replace an earlier successful capture. |
+| Another command owns the runtime | Reject before launching browsers or modifying the installation. |
+| Ctrl+C or SIGTERM | Request cancellation, close owned processes and release the runtime lock. |
+| `doctor` finds a managed-runtime problem | Identify the component and exit 1. |
+| Interrupted or damaged installation | Verify cached archives; use `--repair` to stage replacement of damaged components. |
 
 These are requirements, not a claim that every failure path was exercised.
 Record tested cases and gaps in [verification](verification.md). Changes to

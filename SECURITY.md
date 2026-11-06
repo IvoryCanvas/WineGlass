@@ -13,6 +13,8 @@ Security-sensitive areas include runtime downloads and overrides, PE import
 changes, DevTools connections, process cleanup, HTML escaping and report paths.
 Reports and logs can contain credentials or private application content.
 
-Use one command per runtime. Its prefix belongs to WineGlass and cleanup can
-stop all Wine processes in it. Do not share the prefix with unrelated apps.
+Setup and viewer commands acquire an exclusive runtime lock. Its prefix
+belongs to WineGlass and cleanup can stop all Wine processes in it. Do not
+share the prefix with unrelated apps. Diagnostics verify selected managed
+files; they do not attest every runtime file or make custom binaries trusted.
 This prototype is not a secure browsing environment.

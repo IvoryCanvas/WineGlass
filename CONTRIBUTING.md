@@ -26,7 +26,28 @@ npm run check
 | Runtime pins | Digests and a complete fresh setup rehearsal. |
 
 `npm run check` checks strict TypeScript compilation, Python syntax, local documentation
-links and example metadata. It does not start Wine or measure Windows fidelity.
+links, example metadata and automated regression tests. `npm test` runs the
+automated tests separately. By default, the three browser integration tests are
+skipped, so no browser or Wine process is started. These checks do not measure
+Windows fidelity. Keep failure cases for lock ownership, cancellation, staged install
+recovery and report publication deterministic and independent of the local
+runtime.
+
+To include the optional browser checks on a prepared Apple Silicon Mac:
+
+```sh
+WINEGLASS_TEST_BROWSER="$PWD/.runtime/chromium-mac/chrome-mac/Chromium.app/Contents/MacOS/Chromium" \
+WINEGLASS_TEST_RUNTIME="$PWD/.runtime" \
+npm test
+```
+
+`WINEGLASS_TEST_BROWSER` enables native Chromium tests for HTTP errors,
+readiness timeouts, retained page state and cancellation, including cancellation
+during native startup. `WINEGLASS_TEST_RUNTIME`
+enables the Wine CLI test for live recapture, overlapping-command rejection,
+SIGINT and startup SIGTERM cleanup. It starts visible browser windows and
+needs a working local graphical session. You can set either variable alone.
+Run against a runtime not currently used by another command.
 
 Use `npm run typecheck` for a check without build output, and `npm run build`
 before running a compiled entry point directly. Keep runtime and repository

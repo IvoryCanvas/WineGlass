@@ -12,7 +12,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "setup:wine": "npm run build && node dist/bin/setup-wine.js",
     "demo": "npm run build && node dist/bin/wineglass.js --demo",
-    "check": "npm run build && node dist/scripts/check.js"
+    "test": "npm run build && node --test --test-timeout=30000 dist/tests/*.test.js",
+    "check": "npm run build && node dist/scripts/check.js && node --test --test-timeout=30000 dist/tests/*.test.js"
   },
   "engines": {
     "node": ">=22"

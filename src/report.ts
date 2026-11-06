@@ -31,8 +31,14 @@ export async function writeReport(directory: string, captures: CapturePair): Pro
     captures
   };
   await writeFile(join(directory, 'metadata.json'), JSON.stringify(manifest, null, 2) + '\n');
-  const details = captures.map(c => `<tr><td>${esc(c.label)}</td><td>${esc(c.version)}</td><td>${esc(c.platform)}</td><td>${c.scrollbarWidth}px</td><td>${esc([...new Set(c.platformFonts.map(f => f.familyName))].join(', '))}</td></tr>`).join('');
-  const fontNames = [...new Set(captures[1].platformFonts.map(f => f.familyName))].join(', ');
+  const details = captures.map(c => `<tr><td>${esc(c.label)}<br>${esc(c.url)}</td><td>${esc(c.version)}</td><td>${esc(c.platform)}</td><td>${c.scrollbarWidth}px</td><td>${esc([...new Set(c.platformFonts.map(f => f.familyName))].join(', '))}</td></tr>`).join('');
+  const fontFamilies = [...new Set(captures[1].platformFonts.map(f => f.familyName))];
+  const fontNames = fontFamilies.join(', ') || '표본 없음';
+  const observations: string[] = [];
+  if (captures[0].url !== captures[1].url) observations.push('두 탭의 URL이 다릅니다. 같은 화면 상태인지 확인해 주세요.');
+  if (captures[0].version !== captures[1].version) observations.push('브라우저 버전이 다릅니다. 엔진 버전 차이도 결과에 포함됩니다.');
+  if (!fontFamilies.some(name => /segoe ui/i.test(name))) observations.push('Windows 글꼴 표본에서 Segoe UI가 관찰되지 않았습니다. 설치 여부를 판정하는 검사는 아닙니다.');
+  if (!fontFamilies.some(name => /malgun|맑은 고딕/i.test(name))) observations.push('Windows 글꼴 표본에서 Malgun Gothic(맑은 고딕)이 관찰되지 않았습니다. 한국어 글꼴 차이를 확인해 주세요.');
   const html = `<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>WineGlass — Local comparison</title>
   <style>
   :root { color-scheme: light; font-family: system-ui,sans-serif; background: #f5f6fa; color: #223047; }
@@ -51,6 +57,7 @@ export async function writeReport(directory: string, captures: CapturePair): Pro
   </style><main><h1>Mac ↔ Windows Chromium · Wine</h1>
   <p class="note"><strong>Windows 근사 실행 결과입니다.</strong> Windows용 브라우저 바이너리를 Wine으로 실행했습니다. 실제 Windows의 DirectWrite, 기본 폰트, 네이티브 대화상자, DPI 동작과 동일하다고 보장하지 않습니다. Wine에서 사용된 폰트: ${esc(fontNames)}. Segoe UI·맑은 고딕이 없으면 Windows 기본 글꼴을 검증할 수 없습니다. 펜 입력 조회는 미지원 응답을 반환하는 호환 코드를 사용합니다.</p>
   <p class="muted">${esc(manifest.target)} · ${esc(manifest.capturedAt)}<br>차이가 표시된 픽셀: ${manifest.changedPercent}% — 버그 점수나 Windows 호환성 판정이 아닙니다.</p>
+  ${observations.length ? `<div class="note"><strong>비교 시 확인할 사항</strong><ul>${observations.map(note => `<li>${esc(note)}</li>`).join('')}</ul></div>` : ''}
   <div class="grid"><figure><figcaption>macOS · native Chromium</figcaption><a href="macos.png"><img src="macos.png" alt="Mac screenshot"></a></figure>
   <figure><figcaption>Windows Chromium · Wine approximation</figcaption><a href="wine-windows.png"><img src="wine-windows.png" alt="Windows Chromium running under Wine"></a></figure></div>
   <h2>겹쳐 보기</h2><label>Windows 이미지 투명도 <input type="range" min="0" max="100" value="50" id="alpha"></label>

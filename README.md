@@ -43,9 +43,11 @@ With your development server running, inspect both browser windows:
 node dist/bin/wineglass.js http://localhost:3000 --live
 ```
 
-Press Enter in the terminal to close them. The initial report is saved; later
-interactions do not update it automatically. For capture without keeping the
-windows open, use `--open` instead of `--live`.
+Log in or open the same view in each browser, then type `c` and press Enter in
+the terminal to capture their current pages without reloading. Each capture
+saves a new report. Press Enter, or type `q` and Enter, to close both browsers.
+Inputs are independent; WineGlass does not synchronize clicks or credentials.
+For a single capture, use `--open` instead of `--live`.
 
 ## Read The Result
 
@@ -57,9 +59,21 @@ windows open, use `--open` instead of `--live`.
 | `difference.png` | Pixels that differ between the captures. |
 | `metadata.json` | Browser versions, platforms, viewport, sampled fonts and page errors. |
 
-Results go to `captures/` in the current directory, or to `--out`. A pixel
-difference is an observation, not a defect score. Dynamic content and font
-substitution also produce differences.
+Each successful capture is saved in a new subfolder of `captures/` in the
+current directory, or of `--out`. The terminal prints its `index.html` path.
+Failed attempts do not replace earlier reports. A pixel difference is an
+observation, not a defect score. Dynamic content and font substitution also
+produce differences.
+
+To diagnose a prepared runtime or repair a damaged installation:
+
+```sh
+node dist/bin/wineglass.js doctor
+npm run setup:wine -- --repair
+```
+
+[Diagnostics and recovery](docs/commands.md#diagnostics-and-recovery) describes
+what these checks cover.
 
 ## Verified So Far
 
@@ -90,7 +104,7 @@ browser contexts and captures the page viewport. Existing login state, browser
 chrome and OS dialogs are outside that capture.
 
 The Wine browser runs with `--no-sandbox` and GPU acceleration disabled. Use
-trusted local pages and one command per runtime. The documented pointer-device
+trusted local pages. A runtime lock rejects overlapping commands. The documented pointer-device
 shim reports unsupported pen-device lookup. See [Security](SECURITY.md).
 
 Small public reproductions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md).

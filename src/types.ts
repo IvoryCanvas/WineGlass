@@ -1,4 +1,4 @@
-import type { Browser } from 'playwright';
+import type { Browser, BrowserContext, Page } from 'playwright';
 
 export interface PlatformFont {
   familyName: string;
@@ -45,7 +45,17 @@ export interface CaptureOptions extends Dimensions {
   label: string;
   selector?: string;
   delay?: number;
-  keepOpen?: boolean;
+  signal?: AbortSignal;
+  timeout?: number;
+}
+
+export interface CapturePage {
+  browser: Browser;
+  context: BrowserContext;
+  page: Page;
+  label: string;
+  errors: string[];
+  close(): Promise<void>;
 }
 
 export interface BrowserSession {

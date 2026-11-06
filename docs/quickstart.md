@@ -9,9 +9,10 @@ npm run setup:wine
 npm run demo -- --height 1100 --open
 ```
 
-Setup pins Wine 11.21 and Chromium snapshot 1735907. Wine and Zig archives are
-checked against pinned SHA-256 digests. Browser files come from Google's
-Chromium storage. pefile is installed under `.runtime/` to inspect PE files.
+Setup pins Wine 11.21 and Chromium snapshot 1735907. Wine, Chromium and Zig
+archives are checked against pinned SHA-256 digests before extraction. Browser
+files come from Google's Chromium storage. pefile is installed under `.runtime/`
+to inspect PE files.
 The setup does not install Rosetta or write apps into `/Applications`.
 
 The Node entry points are built from TypeScript. Setup and demo commands
@@ -31,8 +32,18 @@ Start your application in a separate terminal. Then run:
 node dist/bin/wineglass.js http://localhost:3000/settings --live
 ```
 
-Press Enter to close both windows. Existing browser cookies are not imported.
-Clicks, form values and later screenshots are not synchronized.
+The first report is saved automatically. To inspect a logged-in screen or an
+open menu:
+
+1. Log in and navigate in each browser independently.
+2. Open the same menu, modal or view in both windows.
+3. Type `c` and press Enter in the terminal. WineGlass captures the pages as
+   they are, preserving the current session without reloading.
+4. Open the newly printed report path. Every capture has its own folder.
+5. Press Enter, or type `q` and Enter, to close both browsers.
+
+Existing browser cookies are not imported, and the session is not exported for
+the next run. Clicks, form values and navigation are not synchronized.
 
 To capture after an application-specific readiness signal:
 
@@ -45,3 +56,16 @@ node dist/bin/wineglass.js http://localhost:3000/settings \
 Choose a selector your page actually renders, or omit it. `--delay` adds a
 bounded settling period after page load and font readiness. See
 [commands](commands.md) for defaults and failure behavior.
+
+## Diagnose Or Repair Setup
+
+```sh
+node dist/bin/wineglass.js doctor
+npm run setup:wine -- --repair
+```
+
+The diagnostic exits unsuccessfully when it finds a problem and reports the
+affected component. Repair rebuilds damaged pinned components. See
+[commands](commands.md#diagnostics-and-recovery) for the inspection scope and
+custom runtime paths. Keep one command per runtime; overlapping setup or viewer
+commands are rejected. Ctrl+C requests cleanup before the command exits.

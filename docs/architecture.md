@@ -13,20 +13,28 @@ loopback URL or bundled demo
 | File | Responsibility |
 | --- | --- |
 | `bin/wineglass.ts` | Input validation, capture orchestration and cleanup. |
-| `bin/setup-wine.ts` | Pinned runtime downloads and shim build. |
+| `bin/setup-wine.ts` | Pinned runtime setup and repair orchestration. |
+| `src/runtime.ts` | Runtime pins and managed-file integrity inspection. |
+| `src/install.ts` | Verified downloads and staged component installation. |
+| `src/doctor.ts` | Prerequisite, version and runtime diagnostics. |
+| `src/lifecycle.ts` | Exclusive runtime ownership and signal-driven cancellation. |
 | `bin/pointer-compat.py` | PE inspection, shim verification and reversible import change. |
 | `src/capture.ts` | Browser startup, CDP connection, screenshots and font observations. |
 | `src/report.ts` | Pixel comparison, escaped HTML and metadata output. |
+| `src/output.ts` | Stage and publish each complete capture as a new report folder. |
+| `src/live.ts` | Terminal commands for recapture and closing live inspection. |
+| `src/cleanup.ts` | Bound cleanup waits for browser resources. |
 | `src/demo.ts` | Temporary loopback server with an invented example page. |
 | `src/types.ts` | Browser-session, capture-option and output-data contracts. |
 | `src/paths.ts` | Resolve the project root from the compiled module location. |
 | `scripts/check.ts` | Python syntax, documentation and output-schema validation. |
+| `tests/` | Automated failure and regression cases, with optional browser integration checks. |
 
 ## TypeScript Build
 
 `tsconfig.json` uses NodeNext ESM resolution, strict checking, unchecked-index
 checking and exact optional properties. `npm run build` compiles Node entry
-points, runtime modules and repository checks into `dist/`. Only TypeScript
+points, runtime modules, tests and repository checks into `dist/`. Only TypeScript
 source is committed; compiled JavaScript and source maps are ignored.
 
 The compiled entry points resolve `.runtime/` from the project root. The
@@ -41,10 +49,32 @@ independent. Capture is sequential. Default settings are DPR 1, `ko-KR`,
 
 ## Runtime Ownership
 
-Wine's prefix and browser binaries live under `.runtime/`. Cleanup stops the
-launched browsers and Wine processes belonging to this prefix. No concurrent
-run lock exists; commands must not share the runtime simultaneously. Custom
-executable overrides are outside the tested support matrix.
+Wine's prefix and browser binaries live under `.runtime/`. An exclusive lock
+is held throughout setup or browser use; an overlapping command is rejected.
+The lock records its owner and can be recovered after that process exits.
+Cleanup stops the launched browsers and Wine processes belonging to this
+prefix before releasing ownership. SIGINT and SIGTERM request cancellation
+through the same cleanup path. Wine logs use a separate file per run under
+`logs/`. Each browser run has its own Windows profile at
+`C:\wineglass-sessions\<run-id>` inside the Wine prefix. Cleanup removes that
+profile while retaining the prefix and logs. Forced termination can leave
+files behind. Custom executable overrides are outside the tested support
+matrix.
+
+## Installation And Reports
+
+Setup verifies pinned SHA-256 digests for Wine, both Chromium archives and Zig,
+including reused downloads. Components are extracted into staging directories
+and inspected before replacing their installed locations. Interrupted
+replacement can be recovered on the next setup. The diagnostic inspects
+critical managed files and versions; it does not hash the entire runtime or
+launch Windows Chromium.
+
+The initial capture navigates fresh contexts to the target page. In live mode,
+recapture reads the same original tabs without navigation, so login and in-page
+state survive during that run. Each browser remains independent. Reports are
+written into staging and published to a new folder only when complete, keeping
+previous captures intact.
 
 ## Pointer Device Compatibility
 

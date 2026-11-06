@@ -1,8 +1,16 @@
 # Output Contract
 
-The output folder contains `macos.png`, `wine-windows.png`, `difference.png`,
-`metadata.json` and `index.html`. Keep them together when sharing the viewer.
-PNGs contain viewport pixels at DPR 1.
+Every successful capture creates a new subfolder under `--out` (`captures/`
+by default). The terminal prints the exact `index.html` path. Each report folder
+contains `macos.png`, `wine-windows.png`, `difference.png`, `metadata.json` and
+`index.html`. Keep these files together when sharing the viewer. PNGs contain
+viewport pixels at DPR 1.
+
+Report creation uses a temporary staging folder. Only a complete capture pair
+and report are published. A failed attempt does not replace an earlier result.
+Live recapture creates another independent report folder; previous reports
+remain unchanged. A report is a saved snapshot and does not refresh itself
+after later browser interactions.
 
 The [JSON Schema](../schema/metadata.schema.json) describes version 0.1's output.
 The [example receipt](../examples/metadata.json) comes from the bundled demo.
@@ -37,3 +45,10 @@ Pixelmatch uses threshold 0.1 and requires equally sized images. Different
 content, timing, fonts, rasterization or layout can all contribute. Do not turn
 a low percentage into a Windows accuracy claim. Update the schema, example
 and release notes together when changing fields before 1.0.
+
+
+The HTML viewer lists each captured URL and adds observations when URLs or
+browser versions differ. It also notes when Segoe UI or Malgun Gothic was not
+observed in the Windows font sample. Absence from this bounded sample does not
+prove that a font is uninstalled. These notes are comparison context, not a
+Windows compatibility verdict, and do not add fields to the metadata schema.

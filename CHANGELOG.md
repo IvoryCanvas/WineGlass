@@ -7,7 +7,15 @@
 - Open Windows Chromium on a Mac through Wine.
 - Capture matching macOS and Windows browser builds and save a comparison viewer.
 - Record actual versions, platforms, font samples and page errors.
-- Keep both browser contexts open with `--live`.
+- Keep both browser contexts open with `--live` and recapture their current
+  pages using `c` + Enter without reloading.
+- Save each complete capture in a separate report folder.
+- Protect runtime ownership with an exclusive lock and handle cancellation
+  during startup and live inspection.
+- Save Wine diagnostics in per-run log files.
+- Add `doctor`, verified Chromium archives, managed-file integrity checks,
+  staged installation and explicit repair.
+- Add automated regression coverage for failures and recovery.
 - Document the pointer-device shim, output contract, evidence and remaining gaps.
 
 This is a source prototype. Real Windows fidelity and clean-machine setup
